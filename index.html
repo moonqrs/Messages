@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>A Message For You</title>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: "Georgia", serif;
+    background: #800080;
+    color: white;
+    text-align: center;
+    padding: 40px;
+    margin: 0;
+  }
+
+  .container {
+    max-width: 650px;
+    margin: auto;
+    background: #d8bfd8;
+    color: #4b004b;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    text-align: left;
+    overflow: hidden;
+    position: relative;
+  }
+
+  h1 {
+    margin-bottom: 15px;
+    font-family: "Georgia", serif;
+    text-align: center;
+  }
+
+  .intro {
+    font-size: 16px;
+    margin-bottom: 25px;
+    color: #4b004b;
+  }
+
+  label {
+    display: block;
+    text-align: left;
+    margin: 15px 0;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    padding-left: 35px;
+    user-select: none;
+  }
+
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: #f2d9ff;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+
+  label input:checked ~ .checkmark {
+    background-color: #ffccff;
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  label input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  label .checkmark:after {
+    left: 8px;
+    top: 4px;
+    width: 5px;
+    height: 10px;
+    border: solid #800080;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    background-color: #d19cd6;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  button:hover {
+    background-color: #b373b3;
+  }
+
+  /* Envelope flap effect */
+  .envelope-flap {
+    width: 0;
+    height: 0;
+    border-left: 50% solid transparent;
+    border-right: 50% solid transparent;
+    border-bottom: 40px solid #d8bfd8;
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    transition: all 0.6s ease-in-out;
+  }
+
+  .flap-open {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+
+  .message {
+    display: none;
+    max-height: 500px;
+    overflow-y: auto;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 18px;
+    line-height: 1.8;
+    text-align: left;
+    padding-right: 10px;
+    padding-left: 5px;
+  }
+
+  .message p {
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideFade 0.8s forwards;
+  }
+
+  @keyframes slideFade {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .back-btn {
+    margin-top: 20px;
+    background-color: #aa66cc;
+  }
+
+  .back-btn:hover {
+    background-color: #9933cc;
+  }
+
+  input#username {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="page1">
+  <div class="envelope-flap" id="flap"></div>
+  <h1>Hello there! 🤍</h1>
+  <p class="intro">
+    Hi, I’m <strong>Alexa Cassandra Delos Reyes</strong>.<br><br>
+    I made this little website to give a message for everyone out there —
+    whether you’re a close friend, an online friend, a mutual,
+    a relative, or even just an acquaintance who crossed paths with me.
+    <br><br>
+    Please select what best describes you! (˶˃ ᵕ ˂˶)
+  </p>
+
+  <label for="username">Your Name:</label>
+  <input type="text" id="username" placeholder="Enter your name">
+
+  <label>My friends
+    <input type="checkbox" id="friends">
+    <span class="checkmark"></span>
+  </label>
+
+  <label>My online friends
+    <input type="checkbox" id="onlineFriends">
+    <span class="checkmark"></span>
+  </label>
+
+  <label>My mutuals
+    <input type="checkbox" id="mutuals">
+    <span class="checkmark"></span>
+  </label>
+
+  <label>My relatives
+    <input type="checkbox" id="relatives">
+    <span class="checkmark"></span>
+  </label>
+
+  <label>My classmates
+    <input type="checkbox" id="classmates">
+    <span class="checkmark"></span>
+  </label>
+
+  <label>People I’ve worked with
+    <input type="checkbox" id="workedWith">
+    <span class="checkmark"></span>
+  </label>
+
+  <label>My teachers
+    <input type="checkbox" id="teachers">
+    <span class="checkmark"></span>
+  </label>
+
+  <button onclick="openEnvelope()">Continue</button>
+</div>
+
+<div class="container message" id="page2">
+  <h1>💌</h1>
+  <div id="output"></div>
+  <button class="back-btn" onclick="goBack()">← Back</button>
+</div>
+
+<script>
+function openEnvelope() {
+  document.getElementById("flap").classList.add("flap-open");
+  setTimeout(showMessage, 600);
+}
+
+function showMessage() {
+  const name = document.getElementById("username").value || "there";
+  let message = `<p>Hi ${name}!</p>`;
+
+  if (document.getElementById("friends").checked) {
+    message += `<p><strong>To my friends,</strong><br>
+I honestly don’t say this enough, but I am so grateful for each one of you. You’ve been there through so many moments in my life—both the good ones that deserve celebration and the difficult ones that required patience and understanding. With you, I’ve learned what it means to feel supported, accepted, and cared for without having to explain myself too much.
+<br><br>
+Thank you for the laughter that made stressful days lighter, the conversations that lasted longer than planned, and the simple moments that turned into memories I’ll always treasure. Thank you for listening when I needed to vent, for giving advice when I felt lost, and for staying even during times when things weren’t easy. Your presence alone has been a constant reminder that I’m not facing life on my own.
+<br><br>
+I appreciate how you encourage me to grow while still accepting me as I am. Our friendship has helped shape who I am today, and I truly value the bond we share. No matter where life takes us, I will always be thankful for the role you’ve played in my journey.</p>`;
+  }
+
+  if (document.getElementById("onlineFriends").checked) {
+    message += `<p><strong>To my online friends,</strong><br>
+I just want to take a moment to say how grateful I am for all of you. It’s honestly amazing how people who started as usernames, profile pictures, and late-night chats became such an important part of my life. Even though we may be miles apart and living different lives, the connection we share feels real, genuine, and comforting.
+<br><br>
+Thank you for being there during random rants, happy moments, stressful days, and quiet nights when I just needed someone to talk to. Thank you for listening without judgment, for cheering me on, for giving advice, and for making me laugh when I didn’t even feel like smiling. You made the online world feel like a safe space, and that means more to me than you’ll ever know.
+<br><br>
+I appreciate how you accept me as I am, how we can be our true selves without pressure, and how we support each other even from behind screens. You’ve proven that friendship isn’t defined by distance, but by effort, care, and understanding.
+<br><br>
+I’m really thankful to have met you all, and I hope we continue making memories—through chats, calls, shared interests, and moments that make our days a little brighter. 🤍</p>`;
+  }
+
+  if (document.getElementById("mutuals").checked) {
+    message += `<p><strong>To my mutuals,</strong><br>
+Even though our connection may seem simple or casual, I genuinely appreciate you more than you might realize. In a world where social media can sometimes feel overwhelming, you’ve made my online space feel lighter, kinder, and more positive. Through shared interests, small interactions, and moments of support, you’ve helped create a sense of belonging that I’m truly thankful for.
+<br><br>
+Thank you for the kindness you show, whether through thoughtful messages, encouraging comments, or simply being present. You may not always know how much your words or actions mean, but they often make someone’s day better—including mine. These small but genuine connections remind me that community can exist even among people who haven’t met in person.
+<br><br>
+I appreciate the respect, understanding, and authenticity you bring into our interactions. You’ve made my online experience more meaningful, and I’m grateful for the space we share, however big or small it may be.</p>`;
+  }
+
+  if (document.getElementById("relatives").checked) {
+    message += `<p><strong>To my relatives,</strong><br>
+I want to take this moment to express my sincere appreciation for all the love, guidance, and support you’ve given me throughout my life. In different ways and at different times, each of you has played a part in shaping who I am today. Whether through advice, reminders, encouragement, or simply being there, your presence has always mattered to me.
+<br><br>
+Thank you for standing by me during important milestones as well as ordinary days. Your care, concern, and willingness to help have given me a sense of security and belonging that only family can provide. Even when we don’t always see eye to eye or spend as much time together as we’d like, I know that the bond we share is something strong and meaningful.
+<br><br>
+I am deeply grateful to have a family that continues to support, guide, and care for me. Your love and influence are things I carry with me every day, and I will always appreciate the role you play in my life.</p>`;
+  }
+
+  if (document.getElementById("classmates").checked) {
+    message += `<p><strong>To my classmates,</strong><br>
+I just want to say thank you for being part of my journey this year. Whether it was through group projects, classroom discussions, or just sharing laughs during breaks, each of you has made my school experience more memorable. I appreciate the support, patience, and camaraderie we’ve shared—even during stressful times or deadlines that seemed impossible.
+<br><br>
+Thank you for challenging me, for helping me grow, and for making even ordinary school days brighter. I’m grateful for the memories we’ve created together, and I hope that we continue to encourage and inspire each other in the future. You’ve made this year unforgettable, and I truly value every moment we’ve spent as classmates.</p>`;
+  }
+
+  if (document.getElementById("workedWith").checked) {
+    message += `<p><strong>To the people I’ve worked with,</strong><br>
+I want to express my sincere appreciation for the collaboration, guidance, and teamwork we shared this year. Working alongside each of you has been a rewarding experience—I’ve learned so much from your skills, dedication, and perspectives.
+<br><br>
+Thank you for your patience, encouragement, and for making challenges feel manageable with your support. The moments of cooperation, brainstorming, and problem-solving have not only helped achieve our goals but also created memories that I will always value. I’m truly grateful for the opportunity to work with such talented and inspiring individuals, and I hope we continue to learn from and support each other in the future.</p>`;
+  }
+
+  if (document.getElementById("teachers").checked) {
+    message += `<p><strong>To my teachers,</strong><br>
+I want to take a moment to sincerely thank you for all the guidance, patience, and support you’ve given this year. Your dedication to teaching goes beyond lessons and grades—you’ve inspired, encouraged, and challenged us to grow not just academically, but as individuals.
+<br><br>
+Thank you for taking the time to explain, correct, and motivate, even when things got difficult or busy. Your passion and care do not go unnoticed, and the lessons you’ve shared—both inside and outside the classroom—have made a lasting impact on my life.
+<br><br>
+I truly appreciate the effort you put into helping us learn, the encouragement you offer, and the example you set through your dedication and kindness. You’ve made a difference in so many ways, and I am grateful to have had the chance to learn from you this year.</p>`;
+  }
+
+  // Final Thoughts
+  message += `<p><strong>Final Thoughts</strong><br>
+As this year comes to a close, I want to take a moment to send a little positivity to everyone out there—even those I haven’t met personally. Life can be unpredictable and challenging, but I hope that amidst everything, you’ve found moments of joy, growth, and hope.
+<br><br>
+Thank you to everyone—strangers, acquaintances, or people I’ve crossed paths with in passing—for simply being part of this world and contributing, in ways big or small, to the lives around you. Your presence matters, even if you don’t realize it.
+<br><br>
+As we step into a new year, I hope it brings you kindness, opportunities, and happiness. May we all continue to support one another, spread positivity, and make the world a little brighter—one small gesture at a time.</p>`;
+
+  const page2 = document.getElementById("page2");
+  document.getElementById("output").innerHTML = message;
+  document.getElementById("page1").style.display = "none";
+  page2.style.display = "block";
+
+  const paragraphs = page2.querySelectorAll("p");
+  paragraphs.forEach((p, i) => {
+    p.style.animationDelay = `${i * 0.4}s`;
+  });
+}
+
+function goBack() {
+  document.getElementById("page2").style.display = "none";
+  document.getElementById("page1").style.display = "block";
+  document.getElementById("flap").classList.remove("flap-open");
+}
+</script>
+
+</body>
+</html>
+
